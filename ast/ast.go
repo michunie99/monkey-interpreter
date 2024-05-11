@@ -116,15 +116,29 @@ func (es *ExpressionStatement) String() string {
 	return ""
 }
 
-type IntigerLiteral struct {
+type IntegerLiteral struct {
 	Token token.Token // token.INT
 	Value int64
 }
 
-func (il *IntigerLiteral) expressionNode() {}
-func (il *IntigerLiteral) TokenLiteral() string {
+func (il *IntegerLiteral) expressionNode() {}
+func (il *IntegerLiteral) TokenLiteral() string {
 	return il.Token.Literal
 }
-func (il *IntigerLiteral) String() string {
+func (il *IntegerLiteral) String() string {
+	return il.Token.Literal
+}
+
+type PrefixExpression struct {
+	Token    token.Token // token.BANG/token.MINUS
+	Operator string
+	Right    Expression
+}
+
+func (il *PrefixExpression) expressionNode() {}
+func (il *PrefixExpression) TokenLiteral() string {
+	return il.Token.Literal
+}
+func (il *PrefixExpression) String() string {
 	return il.Token.Literal
 }
