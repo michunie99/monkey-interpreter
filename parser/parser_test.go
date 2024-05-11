@@ -133,6 +133,39 @@ func TestIdentifierExpression(t *testing.T) {
 	}
 }
 
+func TestIntigerLiteralEpxression(t *testing.T) {
+	input := "2137;"
+
+	l := lexer.New(input)
+	p := New(l)
+	program := p.ParserProgram()
+
+	checkParseErrors(t, p)
+
+	if len(program.Statements) != 1 {
+		t.Fatalf("len(program.Statements) expected 1. Got %d", len(program.Statements))
+	}
+
+	stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
+	if !ok {
+		t.Fatalf("program.Statements[0] expected type ast.ExpressionStatement. Got %T",
+			program.Statements[0])
+	}
+
+	literal, ok := stmt.Expression.(*ast.IntigerLiteral)
+	if !ok {
+		t.Fatalf("stmt.Expression expected type *ast.IntigerLiteral. Got %T",
+			stmt.Expression)
+	}
+
+	if literal.Value != 2137 {
+		t.Errorf("ident.String() expected 'foobar'. Got %q", literal.String())
+	}
+	if literal.TokenLiteral() != "2137" {
+		t.Errorf("ident.TokenLiteral() expected 'foobar'. Got %q", literal.TokenLiteral())
+	}
+}
+
 func checkParseErrors(t *testing.T, p *Parser) {
 	errors := p.Errors()
 	if len(errors) == 0 {
