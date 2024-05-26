@@ -518,8 +518,8 @@ func TestFunctionLiteralParsing(t *testing.T) {
 			len(function.Parameters))
 	}
 
-	testIdentifier(t, function.Parameters[0], "x")
-	testIdentifier(t, function.Parameters[1], "y")
+	testLiteralExpression(t, function.Parameters[0], "x")
+	testLiteralExpression(t, function.Parameters[1], "y")
 
 	if len(function.Body.Statements) != 1 {
 		t.Fatalf("expected 1 expression in body. got=%d",
@@ -527,7 +527,7 @@ func TestFunctionLiteralParsing(t *testing.T) {
 	}
 	bodyStmt, ok := function.Body.Statements[0].(*ast.ExpressionStatement)
 	if !ok {
-		t.Fatalf("sstmt not *ast.InfixEpression. got=%T", bodyStmt.Expression)
+		t.Fatalf("sstmt not *ast.InfixEpression. got=%T", function.Body.Statements)
 	}
 
 	if !testInfixExpression(t, bodyStmt.Expression, "x", "+", "y") {
