@@ -136,20 +136,21 @@ func (p *Parser) peekError(t token.TokenType) {
 func (p *Parser) parseLetStatement() *ast.LetStatement {
 	stmt := &ast.LetStatement{Token: p.currToken}
 
-	if !p.expectPeek(token.IDENT) { // NOTE: here advanve and check next one
+	if !p.expectPeek(token.IDENT) {
 		return nil
 	}
+
 	stmt.Name = &ast.Identifier{Token: p.currToken, Value: p.currToken.Literal}
 
-	if !p.expectPeek(token.ASSIGN) { // NOTE: here advanve and check next one
+	if !p.expectPeek(token.ASSIGN) {
 		return nil
 	}
 
-	p.nextToken() // NOTE: why go one futher
+	p.nextToken()
+
 	stmt.Value = p.parseExpression(LOWEST)
 
-	// TODO: parser the expression!!!
-	for !p.currTokenIs(token.SEMICOLON) { // NOTE: here advanve and check next one
+	for p.peekTokenIs(token.SEMICOLON) {
 		p.nextToken()
 	}
 
@@ -160,10 +161,10 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 	stmt := &ast.ReturnStatement{Token: p.currToken}
 
 	p.nextToken()
+
 	stmt.ReturnValue = p.parseExpression(LOWEST)
 
-	// TODO: parser the expression!!!
-	for !p.currTokenIs(token.SEMICOLON) {
+	for p.peekTokenIs(token.SEMICOLON) {
 		p.nextToken()
 	}
 	return stmt
