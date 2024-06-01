@@ -277,7 +277,7 @@ func (ce *CallExpression) String() string {
 		params = append(params, a.String())
 	}
 
-	out.WriteString(ce.TokenLiteral())
+	out.WriteString(ce.Function.String())
 	out.WriteString("(")
 	out.WriteString(strings.Join(params, ", "))
 	out.WriteString(")")
