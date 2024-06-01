@@ -29,9 +29,7 @@ type Boolen struct {
 func (b *Boolen) Type() ObjectType { return BOOLEN_OBJ }
 func (b *Boolen) Inspect() string  { return fmt.Sprintf("%t", b.Value) }
 
-type Null struct {
-	Value bool
-}
+type Null struct{}
 
 func (n *Null) Type() ObjectType { return NULL_OBJ }
 func (n *Null) Inspect() string  { return "null" }
