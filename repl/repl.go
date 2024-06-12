@@ -13,6 +13,7 @@ import (
 const PROMPT = ">> "
 
 func Start(in io.Reader, out io.Writer) {
+	// TODO: add support for arrow up for previous comand !!!
 	scanner := bufio.NewScanner(in)
 	env := object.NewEnviroment()
 

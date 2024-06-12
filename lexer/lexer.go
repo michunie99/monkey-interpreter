@@ -75,6 +75,9 @@ func (l *Lexer) NextToken() token.Token {
 		tok = newToken(token.LT, l.ch)
 	case '>':
 		tok = newToken(token.GT, l.ch)
+	case '"':
+		s := l.consumeString()
+		tok = token.Token{Type: token.STRING, Literal: s}
 	case 0:
 		tok.Literal = ""
 		tok.Type = token.EOF
@@ -121,6 +124,17 @@ func (l *Lexer) skipWhitespace() {
 func (l *Lexer) readIdentifier() string {
 	position := l.position
 	for isLetter(l.ch) {
+		l.ReadChar()
+	}
+	return l.input[position:l.position]
+}
+
+func (l *Lexer) consumeString() string {
+	// NOTE: if strings broken look here :)
+	l.ReadChar()
+	position := l.position
+	for l.ch != '"' && l.ch != 0 {
+		// TODO: extent do report errots on EOF
 		l.ReadChar()
 	}
 	return l.input[position:l.position]

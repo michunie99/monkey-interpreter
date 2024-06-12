@@ -47,6 +47,9 @@ const (
 	// Multi character
 	EQ     = "=="
 	NOT_EQ = "!="
+
+	// Build-in datatypes
+	STRING = "STRING"
 )
 
 var keywords = map[string]TokenType{
