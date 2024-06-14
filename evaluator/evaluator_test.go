@@ -302,6 +302,40 @@ addTwo(1);`
 	testIntegerObject(t, testEval(input), 3)
 }
 
+func TestBuildinFunctions(t *testing.T) {
+	tests := []struct {
+		input    string
+		expected interface{}
+	}{
+		{`len("")`, 0},
+		{`len("foobar")`, 6},
+		{`len(1)`, "argument to `len` not supported, got INTEGER"},
+		{`len(1, 2)`, "wrong number of arguments. got=2, want=1"},
+	}
+
+	for _, tt := range tests {
+		evaluated := testEval(tt.input)
+
+		switch expected := tt.expected.(type) {
+		case int:
+			testIntegerObject(t, evaluated, int64(expected))
+		case string:
+			errObj, ok := evaluated.(*object.Error)
+			if !ok {
+				t.Errorf("expected object.Error. got=%T (%+v)",
+					evaluated, evaluated)
+				continue
+			}
+
+			if errObj.Message != expected {
+				t.Errorf("wrong message. expected=%q got+=%q",
+					expected, errObj)
+			}
+		default:
+		}
+	}
+}
+
 func testEval(input string) object.Object {
 	l := lexer.New(input)
 	p := parser.New(l)
