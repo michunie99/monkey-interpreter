@@ -30,10 +30,12 @@ const (
 	SEMICOLON = ";"
 	COMMA     = ","
 
-	LPAREN = "("
-	RPAREN = ")"
-	LBRACE = "{"
-	RBRACE = "}"
+	LPAREN   = "("
+	RPAREN   = ")"
+	LBRACE   = "{"
+	RBRACE   = "}"
+	LBRACKET = "["
+	RBRACKET = "]"
 
 	// Key work
 	FUNCTION = "FUNCTION"
