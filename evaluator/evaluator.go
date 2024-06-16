@@ -100,6 +100,15 @@ func Eval(node ast.Node, env *object.Enviroment) object.Object {
 
 		return applyFunction(function, args)
 
+	case *ast.ArrayLiteral:
+		elements := evalExpressions(node.Elements, env)
+		if len(elements) == 1 && isError(elements[0]) {
+			return elements[0]
+		}
+		return &object.Array{Elements: elements}
+
+		// case *ast.IndexExpression:
+
 	}
 
 	return nil
