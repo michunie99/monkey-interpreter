@@ -309,8 +309,19 @@ func TestBuildinFunctions(t *testing.T) {
 	}{
 		{`len("")`, 0},
 		{`len("foobar")`, 6},
+		{`len([1, 2, 3])`, 3},
 		{`len(1)`, "argument to `len` not supported, got INTEGER"},
 		{`len(1, 2)`, "wrong number of arguments. got=2, want=1"},
+		{`first([1, 2, 3])`, 1},
+		{`first(1)`, "argument to `first` must be ARRAY, got INTEGER"},
+		{`last([1, 2, 3])`, 3},
+		{`last(1)`, "argument to `last` must be ARRAY, got INTEGER"},
+		{`rest([1, 2, 3])`, []int{2, 3}},
+		{`rest([])`, nil},
+		{`rest(1)`, "argument to `rest` must be ARRAY, got INTEGER"},
+		{`push([1, 2, 3], 4)`, []int{1, 2, 3, 4}},
+		{`push(1)`, "wrong number of arguments. got=1, want=2"},
+		{`push(1, 1)`, "first argument to `push` must be ARRAY, got INTEGER"},
 	}
 
 	for _, tt := range tests {
@@ -331,7 +342,26 @@ func TestBuildinFunctions(t *testing.T) {
 				t.Errorf("wrong message. expected=%q got+=%q",
 					expected, errObj)
 			}
-		default:
+		case []int:
+			arrObj, ok := evaluated.(*object.Array)
+			if !ok {
+				t.Errorf("expected object.Error. got=%T (%+v)",
+					evaluated, evaluated)
+				continue
+			}
+
+			if len(arrObj.Elements) != len(expected) {
+				t.Errorf("wrong length. expected=%d got=%d",
+					len(arrObj.Elements), len(expected))
+				continue
+
+			}
+
+			for i, expectedElement := range expected {
+				testIntegerObject(t, arrObj.Elements[i], int64(expectedElement))
+			}
+		case nil:
+			testNullObject(t, evaluated)
 		}
 	}
 }
@@ -424,7 +454,7 @@ func testEval(input string) object.Object {
 func testIntegerObject(t *testing.T, obj object.Object, expected int64) bool {
 	result, ok := obj.(*object.Integer)
 	if !ok {
-		t.Errorf("object is no Integer. got=%T (%+v)", obj, obj)
+		t.Errorf("object is not Integer. got=%T (%+v)", obj, obj)
 		return false
 	}
 	if result.Value != expected {
